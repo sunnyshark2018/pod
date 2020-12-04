@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentinel
+  labels:
+    app: sentinel
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  ports:
+    - port: 8080
+      name: server
+      targetPort: 8080
+  clusterIP: None
+  selector:
+    app: sentinel
+---
+# 外部访问服务
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentinel-svc
+  labels:
+    app: sentinel
+spec:
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+    nodePort: 31808
+  type: NodePort
+  selector:
+    app: sentinel
